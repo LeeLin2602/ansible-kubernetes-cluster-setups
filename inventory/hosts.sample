@@ -1,0 +1,8 @@
+[masters]
+
+[workers]
+
+[cluster:children]
+masters
+workers
+
