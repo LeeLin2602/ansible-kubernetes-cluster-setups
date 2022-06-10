@@ -35,3 +35,9 @@
       - cri-o 
       - cri-o-runc
     update_cache: true
+
+- name: Start and enable cri-o
+  service:
+    name: crio
+    enabled: true
+    state: started
