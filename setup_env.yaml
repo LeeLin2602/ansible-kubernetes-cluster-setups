@@ -5,3 +5,4 @@
   roles:
   - setup_env
   - container_runtime
+  - k8s_installation

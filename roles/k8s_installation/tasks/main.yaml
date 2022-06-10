@@ -1,0 +1,22 @@
+- name: install essential packages
+  apt:
+    pkg:
+      - apt-transport-https 
+      - ca-certificates 
+
+- name: download gpg key
+  ansible.builtin.apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+- name: add deb repo
+  ansible.builtin.apt_repository:
+      repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+
+- name: install packages
+  apt:
+    pkg:
+      - kubelet
+      - kubeadm
+      - kubectl
+    update_cache: yes

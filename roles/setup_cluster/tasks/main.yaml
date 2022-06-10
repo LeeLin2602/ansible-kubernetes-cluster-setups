@@ -1,0 +1,5 @@
+- name: kubeadm init
+  raw: kubeadm init --config '/root/kubeadm-config.yaml'
+
+- name: Deploy Calico pod network add-on
+  raw: kubectl apply -f https://docs.projectcalico.org/v3.16/manifests/calico.yaml
