@@ -38,7 +38,7 @@
 
 - name: Set fact
   set_fact:
-      join_cmd: "{{ kubeadm_join_cmd.stdout }}" 
+    join_cmd: "{{ kubeadm_join_cmd.stdout }}" 
 
-- name: Master join cluster
+- name: join cluster
   command: "{{ join_cmd }} --control-plane"

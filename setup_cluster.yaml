@@ -14,7 +14,3 @@
 - hosts: masters[1:]
   roles:
   - master_join_cluster
-
-- hosts: workers
-  roles:
-  - worker_join_cluster
