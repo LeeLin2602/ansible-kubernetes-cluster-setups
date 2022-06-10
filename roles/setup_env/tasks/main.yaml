@@ -1,0 +1,19 @@
+- name: disable swap mount
+  raw: sed -i "s/UUID=.*swap.*//g" /etc/fstab
+
+- name: disable swap space
+  raw: swapoff -a
+
+- name: enable IPv4 forwarding
+  raw: sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g" /etc/sysctl.conf
+
+- name: apply networking config
+  raw: sysctl -a
+
+- name: install essential packages
+  apt:
+    pkg:
+     - curl
+     - gpg
+    state: latest
+    update_cache: true

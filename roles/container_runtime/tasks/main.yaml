@@ -1,0 +1,12 @@
+- name: add libseccomp release source
+  ansible.builtin.apt_repository:
+      repo: deb http://deb.debian.org/debian buster-backports main
+      state: present
+
+- name: install libseccomp
+  apt:
+    pkg:
+     - libseccomp2
+    default_release: buster-backports
+    state: latest
+    update_cache: true
