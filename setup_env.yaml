@@ -1,7 +1,7 @@
 - hosts: cluster
   vars:
     OS: "Debian_11"
-    CRIO_version: "1.24"
+    CRIO_VERSION: "1.24"
   roles:
   - setup_env
   - container_runtime

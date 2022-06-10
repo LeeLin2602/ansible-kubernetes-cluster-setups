@@ -1,12 +1,37 @@
-- name: add libseccomp release source
-  ansible.builtin.apt_repository:
-      repo: deb http://deb.debian.org/debian buster-backports main
-      state: present
+# - name: add libseccomp deb repo
+#   ansible.builtin.apt_repository:
+#     repo: deb http://deb.debian.org/debian buster-backports main
+#     state: present
 
-- name: install libseccomp
+# - name: install libseccomp
+#   apt:
+#     pkg:
+#      - libseccomp2
+#     default_release: buster-backports
+#     state: latest
+#     update_cache: true
+
+- name: add libcontainer deb repo
+  raw: echo 'deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ OS }}/ /' > '/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list'
+
+- name: add libcontainer cri-o deb repo
+  raw: echo 'deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ CRIO_VERSION }}/{{ OS }}/ /' > '/etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{ CRIO_VERSION }}.list'
+
+- name: create keyrings folder
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    recurse: yes
+
+- name: install libcontainers-archive-keyring.gpg
+  raw: rm '/usr/share/keyrings/libcontainers-archive-keyring.gpg' || true; curl -L 'https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ OS }}/Release.key' | gpg --dearmor -o '/usr/share/keyrings/libcontainers-archive-keyring.gpg'
+
+- name: install libcontainers-crio-archive-keyring.gpg
+  raw: rm '/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg' || true; curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ CRIO_VERSION }}/{{ OS }}/Release.key | gpg --dearmor -o '/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg'
+
+- name: install cri-o
   apt:
     pkg:
-     - libseccomp2
-    default_release: buster-backports
-    state: latest
+      - cri-o 
+      - cri-o-runc
     update_cache: true
