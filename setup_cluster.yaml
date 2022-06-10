@@ -6,3 +6,11 @@
   - setup_env
   - container_runtime
   - k8s_installation
+
+- hosts: masters[0]
+  roles:
+  - setup_cluster
+
+- hosts: masters[1:]
+  roles:
+  - master_join_cluster

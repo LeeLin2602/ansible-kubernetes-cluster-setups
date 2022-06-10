@@ -1,5 +1,49 @@
+- name: Set up kubeadm initialization file
+  template:
+    dest: "/root/kubeadm-config.yaml"
+    src: kubeadm-config.yaml.j2
+
 - name: kubeadm init
   raw: kubeadm init --config '/root/kubeadm-config.yaml'
 
-- name: Deploy Calico pod network add-on
-  raw: kubectl apply -f https://docs.projectcalico.org/v3.16/manifests/calico.yaml
+- name: Copy calico pod network add-on
+  copy:
+    src: calico-3.16.yaml
+    dest: /root/cni.yaml
+
+- name: Copy admin.conf
+  raw: mkdir -p $HOME/.kube && cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+
+- name: Deploy pod network add-on
+  raw: kubectl apply -f /root/cni.yaml
+
+
+- name: Fetch kubernetes master pki files from primary master
+  fetch:
+    src: /etc/kubernetes/pki/{{ item }}
+    dest: /tmp/kubeadm-ha/pki/{{ item }}
+    flat: true
+  with_items:
+    - ca.crt
+    - ca.key
+    - sa.key
+    - sa.pub
+    - front-proxy-ca.crt
+    - front-proxy-ca.key
+
+- name: Fetch kubernetes master etcd files from primary master
+  fetch:
+    src: /etc/kubernetes/pki/etcd/{{ item }}
+    dest: /tmp/kubeadm-ha/pki/etcd/{{ item }}
+    flat: true
+  with_items:
+    - ca.crt
+    - ca.key
+
+- name: Fetching kubernetes master admin files from primary master
+  fetch:
+    src: /etc/kubernetes/{{ item }}
+    dest: /tmp/kubeadm-ha/{{ item }}
+    flat: true
+  with_items:
+    - admin.conf
